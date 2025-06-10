@@ -491,39 +491,11 @@ function resetReverseTab() {
 document.getElementById('reset-btn-direct').addEventListener('click', resetDirectTab);
 document.getElementById('reset-btn-reverse').addEventListener('click', resetReverseTab);
 
-// أضف هذه الدوال لطباعة النتائج
-function printDirectResults() {
-    const printContent = document.getElementById('direct-tab').innerHTML;
-    const originalContent = document.body.innerHTML;
-    
-    document.body.innerHTML = `
-        <div style="direction: rtl; text-align: center; padding: 20px;">
-            <h2>تقرير متابعة الحمل</h2>
-            ${printContent}
-        </div>
-    `;
-    
+// تعديل دوال الطباعة
+function printResults() {
     window.print();
-    document.body.innerHTML = originalContent;
-    location.reload();
 }
 
-function printReverseResults() {
-    const printContent = document.getElementById('reverse-tab').innerHTML;
-    const originalContent = document.body.innerHTML;
-    
-    document.body.innerHTML = `
-        <div style="direction: rtl; text-align: center; padding: 20px;">
-            <h2>تقرير متابعة الحمل - حساب عكسي</h2>
-            ${printContent}
-        </div>
-    `;
-    
-    window.print();
-    document.body.innerHTML = originalContent;
-    location.reload();
-}
-
-// أضف مستمعي الأحداث
-document.getElementById('print-btn-direct').addEventListener('click', printDirectResults);
-document.getElementById('print-btn-reverse').addEventListener('click', printReverseResults);
+// في مستمع الأحداث
+document.getElementById('print-btn-direct').addEventListener('click', printResults);
+document.getElementById('print-btn-reverse').addEventListener('click', printResults);
