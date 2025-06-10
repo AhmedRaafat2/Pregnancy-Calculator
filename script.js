@@ -26,9 +26,9 @@ const PREGNANCY_WEEKS = 40;
             today.setHours(0, 0, 0, 0);
             
             // Set today as default for date inputs
-            document.getElementById('date').value = today.toISOString().split('T')[0]; // Set today's date in date picker
+            //document.getElementById('date').value = today.toISOString().split('T')[0]; // Set today's date in date picker
 // تعيين تاريخ اليوم في حقل اختيار التاريخ
-            document.getElementById('target-date').value = today.toISOString().split('T')[0]; // Set today's date in target date picker
+            //document.getElementById('target-date').value = today.toISOString().split('T')[0]; // Set today's date in target date picker
 // تعيين تاريخ اليوم في حقل التاريخ المطلوب
             
             // Initialize direct calculation
@@ -227,7 +227,7 @@ function initReverseCalculation() {
                 
                 function calculateReversePregnancy() {
                     const targetDate = new Date(targetDateInput.value);
-                    
+
                     if (isNaN(targetDate.getTime())) {
                         showReverseError('خطأ في الإدخال', 'الرجاء اختيار تاريخ صحيح من التقويم.');
                         return;
@@ -290,21 +290,26 @@ function initReverseCalculation() {
             }
             
             function initCalendar() {
-                // Initialize month to week range for reverse tab
-                const pregnancyMonthSelect = document.getElementById('pregnancy-month');
-                if (pregnancyMonthSelect) {
-                    pregnancyMonthSelect.dispatchEvent(new Event('change'));
-                }
-            }
+				const pregnancyMonthSelect = document.getElementById('pregnancy-month');
+				if (pregnancyMonthSelect) {
+					pregnancyMonthSelect.dispatchEvent(new Event('change'));
+					// تعيين القيمة الافتراضية للأسبوع إلى الحد الأدنى للشهر المحدد
+					const weekRange = monthToWeekRange[parseInt(pregnancyMonthSelect.value)];
+					document.getElementById('pregnancy-week').value = weekRange.min;
+				}
+			}
             
             // Utility function to format dates as DD/MM/YYYY
 // دالة مساعدة لتنسيق التواريخ كـ يوم/شهر/سنة
+// استبدل دالة formatDate بهذه الدالة
 function formatDate(date) {
-                const day = date.getDate().toString().padStart(2, '0');
-                const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                const year = date.getFullYear();
-                return `${day}/${month}/${year}`;
-            }
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
             
             function getMonthName(monthIndex) {
                 const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
@@ -433,5 +438,92 @@ function generatePregnancyCalendar(startDate, dueDate, currentWeek, calendarElem
             }
             
             // Initial calculation on page load
-            document.getElementById('calculate-btn').click();
+            // احذف هذا السطر من نهاية الدالة DOMContentLoaded
+// document.getElementById('calculate-btn').click();
+
+// بدلاً من ذلك، سنقوم بتعطيل الزر حتى يتم اختيار تاريخ
+document.addEventListener('DOMContentLoaded', function() {
+    // ... الكود السابق ...
+    
+    // تعطيل زر الحساب حتى يتم اختيار تاريخ
+    document.getElementById('calculate-btn').disabled = true;
+    document.getElementById('reverse-calculate-btn').disabled = true;
+    
+    // تمكين الأزرار عند اختيار تاريخ
+    document.getElementById('date').addEventListener('change', function() {
+        document.getElementById('calculate-btn').disabled = !this.value;
+    });
+    
+    document.getElementById('target-date').addEventListener('change', function() {
+        document.getElementById('reverse-calculate-btn').disabled = !this.value;
+    });
+    
+    // ... بقية الكود ...
+});
         });
+// أضف هذه الدوال في نهاية DOMContentLoaded
+function resetDirectTab() {
+    document.getElementById('date').value = '';
+    document.getElementById('lmp').checked = true;
+    document.getElementById('pregnancy-start-date').textContent = '--/--/----';
+    document.getElementById('due-date').textContent = '--/--/----';
+    document.getElementById('current-week').textContent = '--';
+    document.getElementById('display-current-week').textContent = '--';
+    document.getElementById('pregnancy-progress').style.width = '0%';
+    document.getElementById('pregnancy-calendar').innerHTML = '';
+}
+
+function resetReverseTab() {
+    document.getElementById('target-date').value = '';
+    document.getElementById('pregnancy-month').value = '1';
+    document.getElementById('pregnancy-week').value = '1';
+    document.getElementById('week-day').value = '1';
+    document.getElementById('reverse-pregnancy-start-date').textContent = '--/--/----';
+    document.getElementById('reverse-due-date').textContent = '--/--/----';
+    document.getElementById('reverse-target-date').textContent = '--/--/----';
+    document.getElementById('reverse-info').textContent = 'ستكونين في الأسبوع -- من الحمل، يوم -- من الأسبوع';
+    document.getElementById('reverse-month-info').textContent = 'في الشهر -- من الحمل';
+    document.getElementById('reverse-pregnancy-progress').style.width = '0%';
+    document.getElementById('reverse-pregnancy-calendar').innerHTML = '';
+}
+
+// أضف مستمعي الأحداث
+document.getElementById('reset-btn-direct').addEventListener('click', resetDirectTab);
+document.getElementById('reset-btn-reverse').addEventListener('click', resetReverseTab);
+
+// أضف هذه الدوال لطباعة النتائج
+function printDirectResults() {
+    const printContent = document.getElementById('direct-tab').innerHTML;
+    const originalContent = document.body.innerHTML;
+    
+    document.body.innerHTML = `
+        <div style="direction: rtl; text-align: center; padding: 20px;">
+            <h2>تقرير متابعة الحمل</h2>
+            ${printContent}
+        </div>
+    `;
+    
+    window.print();
+    document.body.innerHTML = originalContent;
+    location.reload();
+}
+
+function printReverseResults() {
+    const printContent = document.getElementById('reverse-tab').innerHTML;
+    const originalContent = document.body.innerHTML;
+    
+    document.body.innerHTML = `
+        <div style="direction: rtl; text-align: center; padding: 20px;">
+            <h2>تقرير متابعة الحمل - حساب عكسي</h2>
+            ${printContent}
+        </div>
+    `;
+    
+    window.print();
+    document.body.innerHTML = originalContent;
+    location.reload();
+}
+
+// أضف مستمعي الأحداث
+document.getElementById('print-btn-direct').addEventListener('click', printDirectResults);
+document.getElementById('print-btn-reverse').addEventListener('click', printReverseResults);

@@ -593,3 +593,164 @@
             .tabs { flex-direction: column; }
             .tab-btn { margin-bottom: 5px; }
         }
+		
+		/* أضف هذه الأنماط في نهاية الملف */
+#reset-btn-direct, 
+#reset-btn-reverse,
+#print-btn-direct,
+#print-btn-reverse {
+    background: linear-gradient(to right, #6c757d, #495057);
+    margin-top: 15px;
+}
+
+#reset-btn-direct:hover, 
+#reset-btn-reverse:hover {
+    background: linear-gradient(to right, #5a6268, #343a40);
+}
+
+#print-btn-direct, 
+#print-btn-reverse {
+    background: linear-gradient(to right, #20c997, #198754);
+}
+
+#print-btn-direct:hover, 
+#print-btn-reverse:hover {
+    background: linear-gradient(to right, #1aa179, #157347);
+}
+
+/* أضف هذه الأنماط للطباعة */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    .container, .container * {
+        visibility: visible;
+    }
+    
+    .container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 10px;
+    }
+    
+    button, .tabs, .footer, .legend {
+        display: none !important;
+    }
+    
+    .tab-content {
+        display: block !important;
+        page-break-inside: avoid;
+    }
+    
+    .app-container {
+        display: block;
+    }
+    
+    .input-section, .result-section, .calendar-section {
+        margin-bottom: 20px;
+        page-break-inside: avoid;
+    }
+    
+    .calendar {
+        transform: scale(0.8);
+        transform-origin: top left;
+    }
+}
+
+/* أضف هذه التعديلات في نهاية الملف */
+
+/* تحسينات للهواتف المحمولة */
+@media (max-width: 768px) {
+    .calendar-header {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+    
+    .calendar-day {
+        min-height: 120px;
+        padding: 8px;
+    }
+    
+    .day-number {
+        font-size: 1.4rem;
+        width: 30px;
+        height: 30px;
+    }
+    
+    .week-label {
+        font-size: 0.75rem;
+        padding: 3px 6px;
+    }
+    
+    .pregnancy-month-label {
+        font-size: 0.8rem;
+    }
+    
+    .month-year, .year-display {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar {
+        grid-template-columns: repeat(7, 1fr);
+        overflow-x: auto;
+    }
+    
+    .calendar-header {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+    
+    .calendar-day {
+        min-height: 100px;
+        min-width: 80px;
+        padding: 5px;
+    }
+    
+    .day-number {
+        font-size: 1.2rem;
+        width: 25px;
+        height: 25px;
+    }
+    
+    .week-label {
+        font-size: 0.7rem;
+        padding: 2px 4px;
+    }
+    
+    .pregnancy-month-label {
+        font-size: 0.75rem;
+    }
+    
+    .month-year, .year-display {
+        font-size: 0.7rem;
+    }
+    
+    .legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* أنماط لمجموعة الأزرار */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group button {
+    flex: 1;
+    min-width: 200px;
+}
+
+@media (max-width: 768px) {
+    .button-group button {
+        min-width: 100%;
+    }
+}
